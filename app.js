@@ -2,7 +2,7 @@ const { stat } = require('fs/promises');
 const fs = require('fs')
 const TeleBot = require('telebot')
 const bot = new TeleBot({
-    token: '1400299756:AAFCRDspSQku0QnUaGAN-vsQTXzAI0V-NOo', // Required. Telegram Bot API token.
+    token: '1400299756:AAFCRDspSQku0QnUaGAN-vsQTXzAI0V-NOo', //Telegram Bot API token.
     allowedUpdates: [], // Optional. List the types of updates you want your bot to receive. Specify an empty list to receive all updates.
     usePlugins: ['askUser'], // Optional. Use user plugins from pluginFolder.
     pluginFolder: '../plugins/', // Optional. Plugin folder location.
@@ -84,7 +84,6 @@ function SetGroupInfo(msg)
 function RemoveGroupUser(msg)
 {
     //删除用户配置
-
 
     
 
