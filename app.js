@@ -60,12 +60,12 @@ bot.on('/set', (msg) => SetGroupInfo(msg));
 function SetGroupInfo(msg)
 {
     //添加更新群组配置表
-    let from = msg.chat;
+    let from = msg.chat
     if(from.username === 'Justin12138' && from.type === 'private')
     {
         try {
-            let text = msg.text;
-            let arry = text.split(' ');
+            let text = msg.text
+            let arry = text.split(' ')
             let json = { }
             json[arry[1]] = {       
                 setInterval:  arry[2],
@@ -78,6 +78,7 @@ function SetGroupInfo(msg)
             return
         }
     }
+    else return
 }
 
 function RemoveGroupUser(msg)
