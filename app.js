@@ -20,6 +20,7 @@ var bot_list = JSON.parse(fs.readFileSync('./user.json').toString())
 bot.on(['/start', '/hello'], (msg) => Startplay(msg))
 bot.on('/off', (msg) => Stopplay(msg))
 bot.on('/set', (msg) => SetGroupInfo(msg));
+bot.on('/remove', (msg) => RemoveGroupUser(msg))
 
 //开始轮询消息
 function Startplay(msg) {
