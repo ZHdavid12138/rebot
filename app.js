@@ -2,7 +2,7 @@ const fs = require('fs')
 const TeleBot = require('telebot')
 const { Writefile, Readfile } = require('./readfile')
 const bot = new TeleBot({
-    token: 'APITELEGRAM 密钥信息', //Telegram Bot API token.
+    token: 'APITELEGRAM 密钥信息', //Telegram bot API TOKEN.
     allowedUpdates: [], // Optional. List the types of updates you want your bot to receive. Specify an empty list to receive all updates.
     usePlugins: ['askUser'], // Optional. Use user plugins from pluginFolder.
     pluginFolder: '../plugins/', // Optional. Plugin folder location.
@@ -12,6 +12,8 @@ const bot = new TeleBot({
         // }
     }
 });
+const AmindN = '' //管理员用户名
+
 //同步读取配置
 var bot_list = JSON.parse(fs.readFileSync('./user.json').toString())
 
@@ -21,7 +23,7 @@ bot.on('/set', (msg) => SetGroupInfo(msg));
 
 //开始轮询消息
 function Startplay(msg) {
-    if (msg.from.username === 'Justin12138') {
+    if (msg.from.username === AmindN) {
         //尝试解析json的群组信息如果没有直接返回
         let title = msg.chat.title
         if(bot_list[title] !== undefined)
@@ -39,7 +41,7 @@ function Startplay(msg) {
 }
 //停止单个轮询
 function Stopplay(msg) {
-    if (msg.from.username === 'Justin12138') {
+    if (msg.from.username === AmindN) {
         let title = msg.chat.title
         if(bot_list[title])
             bot_list[title].status = 0
@@ -49,7 +51,7 @@ function Stopplay(msg) {
 function SetGroupInfo(msg) {
     //添加更新群组配置表
     let from = msg.chat
-    if (from.username === 'Justin12138' && from.type === 'private') {
+    if (from.username === AmindN && from.type === 'private') {
         try {
             let arry = msg.text.split(' ')
             let json = {}
@@ -81,7 +83,7 @@ function SetGroupInfo(msg) {
 function RemoveGroupUser(msg) {
     //删除用户配置
     let from = msg.chat
-    if (from.username === 'Justin12138' && from.type === 'private') 
+    if (from.username === AmindN && from.type === 'private') 
     {
         try {
             let arry = msg.text.split(' ')
