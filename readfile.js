@@ -17,6 +17,7 @@ function Readfile(path, type = 'json')
         })
     })
 }
+
 function Writefile(path, data)
 {
     return new Promise((resolve,rejects) =>{
@@ -27,5 +28,7 @@ function Writefile(path, data)
         })
     })
 }
-module.exports.Readfile = Readfile()
-module.exports.Writefile = Writefile()
+
+module.exports.Readfile = Readfile
+module.exports.Writefile = Writefile
+
