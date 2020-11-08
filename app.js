@@ -2,7 +2,7 @@ const fs = require('fs')
 const TeleBot = require('telebot')
 const { Writefile, Readfile } = require('./readfile')
 const bot = new TeleBot({
-    token: 'APITELEGRAM 密钥信息', //Telegram bot API TOKEN.
+    token: '', //Telegram bot API TOKEN.
     allowedUpdates: [], // Optional. List the types of updates you want your bot to receive. Specify an empty list to receive all updates.
     usePlugins: ['askUser'], // Optional. Use user plugins from pluginFolder.
     pluginFolder: '../plugins/', // Optional. Plugin folder location.
@@ -15,37 +15,67 @@ const bot = new TeleBot({
 const AmindN = '' //管理员用户名
 
 //同步读取配置
-var bot_list = JSON.parse(fs.readFileSync('./user.json').toString())
+var info = JSON.parse(fs.readFileSync('./user.json').toString())
+for(var item in info)
+{
+    info[item].statusc = info[item].status
+    Object.defineProperty(info[item], "status",{
+        get : function(){
+            return this.statusc
+        },
+        set : function(val){
+            if(this.statusc == val) return//返回无用参数
+            this.statusc = val
+            if(val == 1)
+            {
+                StartA()
+            }
+        }
+    })
+    function StartA()
+    {
+        console.log("jiso")
+        var setI = setInterval(() => {
+            if(info[item].status == 0) return clearInterval(setI)//循环前判断状态
+            bot.sendMessage(info[item].id, info[item].text)
+        }, info[item].setInterval * 1000)
+    }
+    StartA()
+}
 
-bot.on(['/start', '/hello'], (msg) => Startplay(msg))
+bot.on('/on', (msg) => Startplay(msg))
 bot.on('/off', (msg) => Stopplay(msg))
-bot.on('/set', (msg) => SetGroupInfo(msg));
+bot.on('/set', (msg) => SetGroupInfo(msg))
+bot.on('/list', (msg) => ShowGrouplist(msg))
 bot.on('/remove', (msg) => RemoveGroupUser(msg))
 
-//开始轮询消息
+//开启全部轮询消息
 function Startplay(msg) {
     if (msg.from.username === AmindN) {
-        //尝试解析json的群组信息如果没有直接返回
-        let title = msg.chat.title
-        if(bot_list[title] !== undefined)
-            bot_list[title].status = 1
-        else
-            return
-        setInterval(() => {
-            //在开始前判断是否继续
-            if (bot_list[title].status == 1)
-                msg.reply.text(bot_list[title].text)
-            else
-                return
-        }, bot_list[title].setInterval)
+        for (const key in info) {
+            if (info.hasOwnProperty(key)) {
+                const element = info[key];
+                element.status = 1
+            }
+        }
+        Writefile('./user.json', JSON.stringify(info)).then(() => {
+            msg.reply.text('已开启全部')
+        },(err) =>{ msg.reply.text('写入配置失败') })
     }
 }
-//停止单个轮询
+
+//停止全部轮询
 function Stopplay(msg) {
     if (msg.from.username === AmindN) {
-        let title = msg.chat.title
-        if(bot_list[title])
-            bot_list[title].status = 0
+        for (const key in info) {
+            if (info.hasOwnProperty(key)) {
+                const element = info[key];
+                element.status = 0
+            }
+        }
+        Writefile('./user.json', JSON.stringify(info)).then(() => {
+            msg.reply.text('已关闭全部')
+        },(err) =>{ msg.reply.text('写入配置失败') })
     }
 }
 
@@ -65,13 +95,13 @@ function SetGroupInfo(msg) {
             Readfile('./user.json').then((res) => {
                 json = res
                 json[arry[1]] = {
-                    setInterval: arry[2] * 1000,
+                    setInterval: arry[2],
                     text: arry[3],
                     status: arry[4] ? 1 : 0
                 }
                 Writefile('./user.json', JSON.stringify(json)).then(() => {
                     msg.reply.text('添加成功')
-                    bot_list = json
+                    info = json
                 })
             })
         } catch (error) {
@@ -100,7 +130,6 @@ function RemoveGroupUser(msg) {
                     })
                 } else
                     msg.reply.text('配置中没有此信息')
-                
             })
         } catch (error) {
             return
@@ -108,7 +137,10 @@ function RemoveGroupUser(msg) {
     }
     else return
 }
+function ShowGrouplist(msg)
+{
 
+}
 //搜索功能
 function Serach(age) {
     if (age == null || age == 0 || age == '' || age == ' ')
