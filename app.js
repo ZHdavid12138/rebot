@@ -1,6 +1,4 @@
-const { rejects } = require('assert');
 const fs = require('fs');
-const { resolve } = require('path');
 const TeleBot = require('telebot')
 const { Writefile, Readfile } = require('./readfile')
 const bot = new TeleBot({
